@@ -1,4 +1,28 @@
 <template>
+  <v-app>
+    <nav-drawer>
+      <!-- -->
+    </nav-drawer>
+
+    <v-app-bar app>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-toolbar-title>Collapsing Bar</v-toolbar-title>
+    </v-app-bar>
+
+    <!-- Sizes your content based upon application components -->
+    <v-main>
+      <!-- Provides the application the proper gutter -->
+      <v-container fluid>
+        <!-- If using vue-router -->
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+
+    <v-footer app>
+      <!-- -->
+    </v-footer>
+  </v-app>
+  <!--
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
@@ -6,7 +30,20 @@
     </div>
     <router-view />
   </div>
+  -->
 </template>
+
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import NavDrawer from "./components/NavDrawer.vue";
+
+@Component({
+  components: {
+    NavDrawer,
+  },
+})
+export default class App extends Vue {}
+</script>
 
 <style lang="scss">
 #app {
