@@ -18,7 +18,10 @@ module.exports = {
 		"no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
 		"linebreak-style": "off",
 		"prettier/prettier": [
-			'error', { "endOfLine": "auto" }
+			"error", { "endOfLine": "auto" }
+		],
+		"@typescript-eslint/explicit-module-boundary-types": [
+			"error", { "allowedNames": ["created"] }
 		]
 	},
 };
