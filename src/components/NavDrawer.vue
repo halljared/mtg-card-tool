@@ -12,7 +12,7 @@
     <v-list dense nav>
       <v-list-item-group color="primary">
         <v-list-item v-for="item in items" :key="item.title" link>
-          <v-list-item-icon>
+          <v-list-item-icon class="mr-0">
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
