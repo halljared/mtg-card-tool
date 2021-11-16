@@ -4,9 +4,9 @@
 			<!-- -->
 		</nav-drawer>
 
-		<v-app-bar app>
-			<v-app-bar-nav-icon></v-app-bar-nav-icon>
-			<v-toolbar-title>Collapsing Bar</v-toolbar-title>
+		<v-app-bar app color="blue">
+			<v-app-bar-nav-icon color="white" @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
+			<v-toolbar-title class="white--text">Jared's Collection Browser</v-toolbar-title>
 		</v-app-bar>
 
 		<!-- Sizes your content based upon application components -->
@@ -36,13 +36,18 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import NavDrawer from "./components/NavDrawer.vue";
+import appModule from '@/store/modules/App';
 
 @Component({
 	components: {
 		NavDrawer,
 	},
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+	toggleDrawer() {
+		appModule.setDrawer(!appModule.drawer);
+	}
+}
 </script>
 
 <style lang="scss">
