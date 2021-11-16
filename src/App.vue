@@ -4,11 +4,8 @@
       <!-- -->
     </nav-drawer>
 
-    <v-app-bar app color="secondary" dense>
-      <v-app-bar-nav-icon
-        color="white"
-        @click.stop="toggleDrawer()"
-      ></v-app-bar-nav-icon>
+    <v-app-bar app dense color="primary">
+      <v-app-bar-nav-icon @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text"></v-toolbar-title>
     </v-app-bar>
 
@@ -45,7 +42,7 @@ import appModule from "@/store/modules/App";
   },
 })
 export default class App extends Vue {
-  toggleDrawer() {
+  toggleDrawer(): void {
     appModule.setDrawer(!appModule.drawer);
   }
 }
