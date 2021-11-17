@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Liliana Vess",
+    "setNumber": 123,
+    "setCode": "M12",
+    "condition": "NM"
+  },
+  {
+    "name": "Ajani Whitemane",
+    "setNumber": 123,
+    "setCode": "LWN",
+    "condition": "NM"
+  },
+  {
+    "name": "Jace Beleren",
+    "setNumber": 123,
+    "setCode": "LWN",
+    "condition": "NM"
+  },
+  {
+    "name": "Garruk Wildspeaker",
+    "setNumber": 124,
+    "setCode": "LWN",
+    "condition": "NM"
+  },
+  {
+    "name": "Garruk Wildspeaker",
+    "setNumber": 125,
+    "setCode": "LWA",
+    "condition": "NM"
+  },
+  {
+    "name": "Garruk Wildspeaker",
+    "setNumber": 126,
+    "setCode": "LWB",
+    "condition": "NM"
+  },
+  {
+    "name": "Garruk Wildspeaker",
+    "setNumber": 127,
+    "setCode": "LWC",
+    "condition": "NM"
+  }
+]

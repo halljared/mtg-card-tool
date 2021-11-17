@@ -1,24 +1,27 @@
 <template>
   <v-app>
-    <nav-drawer>
-      <!-- -->
-    </nav-drawer>
+    <nav-drawer> </nav-drawer>
 
     <v-app-bar app dense color="primary">
       <v-app-bar-nav-icon @click.stop="toggleDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text"></v-toolbar-title>
     </v-app-bar>
 
-    <!-- Sizes your content based upon application components -->
     <v-main>
       <v-container fluid>
         <router-view></router-view>
       </v-container>
+      <v-bottom-navigation app color="primary" :value="value">
+        <v-btn value="browse" to="/">
+          <span>Browse</span>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <v-btn value="wants" to="/about">
+          <span>Wants</span>
+          <v-icon>mdi-playlist-check</v-icon>
+        </v-btn>
+      </v-bottom-navigation>
     </v-main>
-
-    <v-footer app>
-      <!-- -->
-    </v-footer>
   </v-app>
   <!--
 	<div id="app">
@@ -35,6 +38,9 @@
 import { Vue, Component } from "vue-property-decorator";
 import NavDrawer from "./components/NavDrawer.vue";
 import appModule from "@/store/modules/App";
+import cards from "@/store/cards.json";
+import cardModule from "@/store/modules/Cards";
+import Card from "./types/Card";
 
 @Component({
   components: {
@@ -42,6 +48,10 @@ import appModule from "@/store/modules/App";
   },
 })
 export default class App extends Vue {
+  value = "browse";
+  created() {
+    cardModule.importCollection(cards as Card[]);
+  }
   toggleDrawer(): void {
     appModule.setDrawer(!appModule.drawer);
   }
