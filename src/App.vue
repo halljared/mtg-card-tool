@@ -16,7 +16,7 @@
           <span>Browse</span>
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <v-btn value="wants" to="/about">
+        <v-btn value="wants" to="/wants">
           <span>Wants</span>
           <v-icon>mdi-playlist-check</v-icon>
         </v-btn>
