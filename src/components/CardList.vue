@@ -73,6 +73,6 @@ a {
   border-color: rgb(109, 109, 109);
 }
 .on-hover {
-  cursor: pointer;
+  // cursor: pointer;
 }
 </style>

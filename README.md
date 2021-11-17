@@ -1,4 +1,6 @@
-# hello-world
+# MTG Trade Tool
+
+A tool for browsing and selecting cards for trade
 
 ## Project setup
 ```
