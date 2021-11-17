@@ -1,22 +1,45 @@
 <template>
   <v-container>
-    <v-row v-for="card in cards" :key="card.name" class="mb-3">
-      <v-card outlined elevation="2">
-        <v-row>
-          <v-col cols="2">
-            <v-card-text>
-              {{ card.name }}
-            </v-card-text>
-          </v-col>
-          <v-col cols="2">
-            <v-card-text> EMN </v-card-text>
-          </v-col>
-          <v-col cols="2">
-            <v-card-text> LP </v-card-text>
-          </v-col>
-        </v-row>
+    <v-card outlined tile elevation="4" width="100%" class="mb-2">
+      <v-row>
+        <v-col cols="6" md="2" v-for="(val, prop) in cards[1]" :key="prop">
+          <v-card-text class="pa-2">
+            {{ prop }}
+          </v-card-text>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-hover
+      v-slot="{ hover }"
+      v-for="card in cards"
+      :key="card.name + card.setCode"
+    >
+      <v-card
+        outlined
+        tile
+        :elevation="hover ? 6 : 0"
+        width="100%"
+        :class="{ 'on-hover': hover }"
+        class="my-1"
+      >
+        <v-container>
+          <v-row>
+            <v-col
+              cols="6"
+              md="2"
+              v-for="(val, prop) in card"
+              :key="prop"
+              class="pa-1"
+            >
+              <v-card-text class="pa-1">
+                {{ val }}
+              </v-card-text>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card>
-    </v-row>
+    </v-hover>
+    <!-- </v-row> -->
   </v-container>
 </template>
 
@@ -45,5 +68,11 @@ li {
 }
 a {
   color: #42b983;
+}
+.v-application.theme--dark .elevation-6 {
+  border-color: rgb(109, 109, 109);
+}
+.on-hover {
+  cursor: pointer;
 }
 </style>

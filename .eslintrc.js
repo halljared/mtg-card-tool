@@ -22,6 +22,7 @@ module.exports = {
 		],
 		"@typescript-eslint/explicit-module-boundary-types": [
 			"error", { "allowedNames": ["created"] }
-		]
+		],
+		"no-unused-expressions": "error"
 	},
 };
