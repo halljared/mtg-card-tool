@@ -1,100 +1,21 @@
 <template>
-  <v-container fluid>
-    <v-card
-      outlined
-      tile
-      v-if="cards.length > 0"
-      elevation="4"
-      width="100%"
-      class="mb-2"
-    >
-      <v-container class="pa-0">
-        <v-row>
-          <v-col cols="9">
-            <v-container class="py-0">
-              <v-row>
-                <v-col
-                  cols="6"
-                  :md="prop == 'name' ? 3 : 2"
-                  v-for="(val, prop) in cards[0]"
-                  :key="prop"
-                >
-                  <v-card-text class="pa-2">
-                    {{ prop }}
-                  </v-card-text>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-    <v-card outlined tile v-else elevation="4" width="100%" class="mb-2">
-      <v-card-title class="text-center mx-auto d-block"
-        >No wants have been selected</v-card-title
-      >
-    </v-card>
-    <v-hover
-      v-slot="{ hover }"
-      v-for="card in cards"
-      :key="card.name + card.setCode"
-    >
-      <v-card
-        outlined
-        tile
-        :elevation="hover ? 6 : 0"
-        width="100%"
-        :class="{ 'on-hover': hover }"
-        class="my-1"
-      >
+  <v-container>
+    <div v-if="cards.length > 0">
+      <v-card outlined tile elevation="4" width="100%" class="mb-2">
         <v-container class="pa-0">
           <v-row>
-            <v-col cols="9">
-              <v-container>
+            <v-col cols="8" md="10" class="pr-0">
+              <v-container class="py-0">
                 <v-row>
                   <v-col
                     cols="6"
                     :md="prop == 'name' ? 3 : 2"
-                    v-for="(val, prop) in card"
+                    v-for="(val, prop) in cards[0]"
                     :key="prop"
-                    class="pa-1"
                   >
-                    <v-card-text class="pa-1 text-truncate">
-                      {{ val }}
+                    <v-card-text class="pa-2 text-truncate">
+                      {{ prop }}
                     </v-card-text>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-col>
-            <v-col
-              class="pa-1"
-              :class="{ 'd-none': !hover && !selected(card) }"
-            >
-              <v-container fill-height>
-                <v-row>
-                  <v-col>
-                    <v-btn
-                      outlined
-                      color="success"
-                      class="float-md-right"
-                      height="30px"
-                      width="48px"
-                      v-if="!selected(card)"
-                      @click.stop="wantClicked(card)"
-                    >
-                      <v-icon>mdi-plus-box</v-icon>
-                    </v-btn>
-                    <v-btn
-                      outlined
-                      color="warning"
-                      class="float-md-right"
-                      height="30px"
-                      width="48px"
-                      v-else
-                      @click.stop="removeClicked(card)"
-                    >
-                      <v-icon>mdi-minus-box</v-icon>
-                    </v-btn>
                   </v-col>
                 </v-row>
               </v-container>
@@ -102,7 +23,87 @@
           </v-row>
         </v-container>
       </v-card>
-    </v-hover>
+      <v-hover
+        v-slot="{ hover }"
+        v-for="card in cards"
+        :key="card.name + card.setCode"
+      >
+        <v-card
+          outlined
+          tile
+          :elevation="hover ? 6 : 0"
+          width="100%"
+          :class="{ 'on-hover': hover }"
+          class="my-1"
+        >
+          <v-container class="pa-0">
+            <v-row>
+              <v-col cols="8" md="10" class="pr-0">
+                <v-container>
+                  <v-row>
+                    <v-col
+                      cols="6"
+                      :md="prop == 'name' ? 3 : 2"
+                      v-for="(val, prop) in card"
+                      :key="prop"
+                      class="pa-1"
+                    >
+                      <v-card-text class="pa-1 text-truncate">
+                        {{ val }}
+                      </v-card-text>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-col>
+              <v-col
+                cols="4"
+                md="2"
+                class="pa-1"
+                :class="{ 'd-none': !hover && !selected(card) }"
+              >
+                <v-container fill-height>
+                  <v-row>
+                    <v-col>
+                      <v-btn
+                        outlined
+                        color="success"
+                        class="float-md-right"
+                        height="30px"
+                        width="48px"
+                        v-if="!selected(card)"
+                        @click.stop="wantClicked(card)"
+                      >
+                        <v-icon>mdi-plus-box</v-icon>
+                      </v-btn>
+                      <v-btn
+                        outlined
+                        color="warning"
+                        class="float-md-right"
+                        height="30px"
+                        width="48px"
+                        v-else
+                        @click.stop="removeClicked(card)"
+                      >
+                        <v-icon>mdi-minus-box</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-hover>
+    </div>
+    <div v-else>
+      <v-card outlined tile elevation="4" width="100%" class="mb-2">
+        <v-card-title
+          class="text-center mx-auto d-block"
+          style="word-break: keep-all"
+          >No wants have been selected</v-card-title
+        >
+      </v-card>
+    </div>
   </v-container>
 </template>
 

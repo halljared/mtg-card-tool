@@ -9,7 +9,7 @@ import store from "@/store";
 
 @Module({ name: "app", store, dynamic: true })
 class AppModule extends VuexModule {
-  drawer = true;
+  drawer = false;
 
   @Mutation
   setAppDrawer(val: boolean) {
