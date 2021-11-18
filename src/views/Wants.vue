@@ -17,7 +17,7 @@ import cardModule from "@/store/modules/Cards";
 })
 export default class Wants extends Vue {
   get wants(): Card[] {
-    return cardModule.collection.slice(0, 2);
+    return cardModule.wants;
   }
 }
 </script>

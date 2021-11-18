@@ -6,7 +6,7 @@
     "condition": "NM"
   },
   {
-    "name": "Ajani Whitemane",
+    "name": "Ajani WhitemaneAjani",
     "setNumber": 123,
     "setCode": "LWN",
     "condition": "NM"
@@ -37,6 +37,12 @@
   },
   {
     "name": "Garruk Wildspeaker",
+    "setNumber": 127,
+    "setCode": "LWC",
+    "condition": "NM"
+  },
+  {
+    "name": "Card with a really long name",
     "setNumber": 127,
     "setCode": "LWC",
     "condition": "NM"

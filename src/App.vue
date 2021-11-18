@@ -18,20 +18,19 @@
         </v-btn>
         <v-btn value="wants" to="/wants">
           <span>Wants</span>
-          <v-icon>mdi-playlist-check</v-icon>
+          <v-badge
+            color="light-green darken-2"
+            :value="wantsCount"
+            :content="wantsCount"
+            offset-x="8px"
+            offset-y="8px"
+          >
+            <v-icon>mdi-playlist-check</v-icon>
+          </v-badge>
         </v-btn>
       </v-bottom-navigation>
     </v-main>
   </v-app>
-  <!--
-	<div id="app">
-		<div id="nav">
-			<router-link to="/">Home</router-link> |
-			<router-link to="/about">About</router-link>
-		</div>
-		<router-view />
-	</div>
-	-->
 </template>
 
 <script lang="ts">
@@ -54,6 +53,9 @@ export default class App extends Vue {
   }
   toggleDrawer(): void {
     appModule.setDrawer(!appModule.drawer);
+  }
+  get wantsCount(): number {
+    return cardModule.wants.length;
   }
 }
 </script>

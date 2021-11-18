@@ -1,13 +1,38 @@
 <template>
-  <v-container>
-    <v-card outlined tile elevation="4" width="100%" class="mb-2">
-      <v-row>
-        <v-col cols="6" md="2" v-for="(val, prop) in cards[1]" :key="prop">
-          <v-card-text class="pa-2">
-            {{ prop }}
-          </v-card-text>
-        </v-col>
-      </v-row>
+  <v-container fluid>
+    <v-card
+      outlined
+      tile
+      v-if="cards.length > 0"
+      elevation="4"
+      width="100%"
+      class="mb-2"
+    >
+      <v-container class="pa-0">
+        <v-row>
+          <v-col cols="9">
+            <v-container class="py-0">
+              <v-row>
+                <v-col
+                  cols="6"
+                  :md="prop == 'name' ? 3 : 2"
+                  v-for="(val, prop) in cards[0]"
+                  :key="prop"
+                >
+                  <v-card-text class="pa-2">
+                    {{ prop }}
+                  </v-card-text>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+    <v-card outlined tile v-else elevation="4" width="100%" class="mb-2">
+      <v-card-title class="text-center mx-auto d-block"
+        >No wants have been selected</v-card-title
+      >
     </v-card>
     <v-hover
       v-slot="{ hover }"
@@ -22,18 +47,57 @@
         :class="{ 'on-hover': hover }"
         class="my-1"
       >
-        <v-container>
+        <v-container class="pa-0">
           <v-row>
+            <v-col cols="9">
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="6"
+                    :md="prop == 'name' ? 3 : 2"
+                    v-for="(val, prop) in card"
+                    :key="prop"
+                    class="pa-1"
+                  >
+                    <v-card-text class="pa-1 text-truncate">
+                      {{ val }}
+                    </v-card-text>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
             <v-col
-              cols="6"
-              md="2"
-              v-for="(val, prop) in card"
-              :key="prop"
               class="pa-1"
+              :class="{ 'd-none': !hover && !selected(card) }"
             >
-              <v-card-text class="pa-1">
-                {{ val }}
-              </v-card-text>
+              <v-container fill-height>
+                <v-row>
+                  <v-col>
+                    <v-btn
+                      outlined
+                      color="success"
+                      class="float-md-right"
+                      height="30px"
+                      width="48px"
+                      v-if="!selected(card)"
+                      @click.stop="wantClicked(card)"
+                    >
+                      <v-icon>mdi-plus-box</v-icon>
+                    </v-btn>
+                    <v-btn
+                      outlined
+                      color="warning"
+                      class="float-md-right"
+                      height="30px"
+                      width="48px"
+                      v-else
+                      @click.stop="removeClicked(card)"
+                    >
+                      <v-icon>mdi-minus-box</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
             </v-col>
           </v-row>
         </v-container>
@@ -44,11 +108,27 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Card from "../types/Card";
+import Card, { cardEquals } from "../types/Card";
+import cardModule from "@/store/modules/Cards";
+import Wants from "../views/Wants.vue";
 
 @Component
 export default class CardList extends Vue {
   @Prop() private cards!: Card[];
+
+  wantClicked(card: Card): void {
+    cardModule.addWant(card);
+  }
+  removeClicked(card: Card): void {
+    cardModule.removeWant(card);
+  }
+  selected(card: Card): boolean {
+    let filtered = cardModule.wants.filter((_card) => {
+      return cardEquals(card, _card);
+    });
+
+    return filtered.length == 1;
+  }
 }
 </script>
 

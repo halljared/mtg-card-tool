@@ -7,6 +7,7 @@ import {
 } from "vuex-module-decorators";
 import store from "@/store";
 import Card from "@/types/Card";
+import { cardEquals } from "../../types/Card";
 
 @Module({ name: "cards", store, dynamic: true })
 class CardModule extends VuexModule {
@@ -23,7 +24,13 @@ class CardModule extends VuexModule {
   }
   @Mutation
   pushWant(card: Card) {
-    this.wants.push(card);
+    this.wants.push(Object.assign({}, card));
+  }
+  @Mutation
+  filterWant(card: Card) {
+    this.wants = this.wants.filter((_card) => {
+      return !cardEquals(card, _card);
+    });
   }
 
   @Action({ commit: "setCollection" })
@@ -36,6 +43,10 @@ class CardModule extends VuexModule {
   }
   @Action({ commit: "pushWant" })
   addWant(card: Card) {
+    return card;
+  }
+  @Action({ commit: "filterWant" })
+  removeWant(card: Card) {
     return card;
   }
 }

@@ -11,3 +11,7 @@ export default interface Card {
   setCode: string;
   condition: Condition;
 }
+
+export function cardEquals(a: Card, b: Card): boolean {
+  return a.name + a.setCode == b.name + b.setCode;
+}
