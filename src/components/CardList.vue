@@ -31,7 +31,7 @@
         <v-card
           outlined
           tile
-          :elevation="hover ? 6 : 0"
+          :elevation="hover ? 2 : 0"
           width="100%"
           :class="{ 'on-hover': hover }"
           class="my-1"
@@ -111,7 +111,6 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Card, { cardEquals } from "../types/Card";
 import cardModule from "@/store/modules/Cards";
-import Wants from "../views/Wants.vue";
 
 @Component
 export default class CardList extends Vue {
