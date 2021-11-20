@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
-import Wants from "../views/Wants.vue";
+import Home from "@/views/Home.vue";
+import Wants from "@/views/Wants.vue";
+import MongoAPI from "@/components/MongoAPI.vue";
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes: Array<RouteConfig> = [
     path: "/wants",
     name: "Wants",
     component: Wants,
+  },
+  {
+    path: "/api",
+    name: "API",
+    component: MongoAPI,
   },
   {
     path: "/about",

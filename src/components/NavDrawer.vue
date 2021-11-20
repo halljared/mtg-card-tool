@@ -1,14 +1,5 @@
 <template>
   <v-navigation-drawer v-model="drawer" app>
-    <!-- <v-list-item>
-			<v-list-item-content>
-				<v-list-item-title class="text-h6"> Title </v-list-item-title>
-				<v-list-item-subtitle> Subtitle </v-list-item-subtitle>
-			</v-list-item-content>
-		</v-list-item> -->
-
-    <!-- <v-divider></v-divider> -->
-
     <v-list dense nav>
       <v-list-item-group color="primary">
         <v-list-item v-for="item in items" :key="item.title" link>

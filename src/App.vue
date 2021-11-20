@@ -40,6 +40,7 @@ import appModule from "@/store/modules/App";
 import cards from "@/store/cards.json";
 import cardModule from "@/store/modules/Cards";
 import Card from "./types/Card";
+import apiModule from "@/store/modules/API";
 
 @Component({
   components: {
@@ -49,7 +50,11 @@ import Card from "./types/Card";
 export default class App extends Vue {
   value = "browse";
   created() {
-    cardModule.importCollection(cards as Card[]);
+    const tempCards: Card[] = cards as Card[];
+    cardModule.importCollection(tempCards);
+    for (let card of tempCards) {
+      apiModule.fetchCard(card);
+    }
   }
   toggleDrawer(): void {
     appModule.setDrawer(!appModule.drawer);

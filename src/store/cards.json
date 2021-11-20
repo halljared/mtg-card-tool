@@ -8,43 +8,43 @@
   {
     "name": "Ajani WhitemaneAjani",
     "setNumber": 123,
-    "setCode": "LWN",
+    "setCode": "LRW",
     "condition": "NM"
   },
   {
     "name": "Jace Beleren",
     "setNumber": 123,
-    "setCode": "LWN",
+    "setCode": "LRW",
     "condition": "NM"
   },
   {
     "name": "Garruk Wildspeaker",
     "setNumber": 124,
-    "setCode": "LWN",
+    "setCode": "LRW",
     "condition": "NM"
   },
   {
     "name": "Garruk Wildspeaker",
     "setNumber": 125,
-    "setCode": "LWA",
+    "setCode": "ORI",
     "condition": "NM"
   },
   {
     "name": "Garruk Wildspeaker",
     "setNumber": 126,
-    "setCode": "LWB",
+    "setCode": "ORI",
     "condition": "NM"
   },
   {
     "name": "Garruk Wildspeaker",
     "setNumber": 127,
-    "setCode": "LWC",
+    "setCode": "ORI",
     "condition": "NM"
   },
   {
     "name": "Card with a really long name",
     "setNumber": 127,
-    "setCode": "LWC",
+    "setCode": "ORI",
     "condition": "NM"
   }
 ]
