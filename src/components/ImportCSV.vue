@@ -44,7 +44,9 @@ export default class ImportCSV extends Vue {
   @Watch("file")
   fileChanged(file: File | null): void {
     if (file) {
-      importModule.fileSelected(file);
+      importModule.fileSelected(file).then(() => {
+        this.$router.push("/browse");
+      });
     }
   }
 }

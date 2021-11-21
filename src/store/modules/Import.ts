@@ -6,29 +6,54 @@ import {
   getModule,
 } from "vuex-module-decorators";
 import store from "@/store";
-import Card from "@/types/Card";
+import Card, { fromCSV, ScryfallCard } from "@/types/Card";
+import { parse } from "csv-parse/lib/sync";
+import apiModule from "@/store/modules/API";
+import { CSV } from "@/types/CSV";
 
 @Module({ name: "import", store, dynamic: true })
 class ImportModule extends VuexModule {
-  csv = "";
+  fileText = "";
+  csv: CSV[] = [];
   cards: Card[] = [];
 
   @Mutation
-  setCSV(val: string) {
-    this.csv = val;
+  setCSV(val: CSV[]) {
+    this.csv = Array.from(val);
+  }
+  @Mutation
+  setFileText(val: string) {
+    this.fileText = val;
   }
 
   @Action
-  fileSelected(val: File) {
+  fileSelected(
+    val: File
+  ): Promise<PromiseSettledResult<void | ScryfallCard>[]> {
     const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      const result: string | null = reader.result as string | null;
-      if (result) {
-        this.context.commit("setCSV", result);
-      }
+    const fetchPromise = new Promise<
+      PromiseSettledResult<void | ScryfallCard>[]
+    >((resolve) => {
+      reader.addEventListener("load", () => {
+        const result: string | null = reader.result as string | null;
+        if (result) {
+          this.context.commit("setFileText", result);
+          const records = parse(result, {
+            columns: true,
+            skip_empty_lines: true,
+          });
+          this.context.commit("setCSV", records);
+          const promises: Promise<void | ScryfallCard>[] = [];
+          for (const record of records) {
+            promises.push(apiModule.fetchCard(fromCSV(record)));
+          }
+          const promiseAll = Promise.allSettled(promises);
+          resolve(promiseAll);
+        }
+      });
+      reader.readAsText(val);
     });
-    reader.readAsText(val);
-    return val;
+    return fetchPromise;
   }
   @Action
   parseCSV() {

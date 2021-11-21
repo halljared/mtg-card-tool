@@ -37,10 +37,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import NavDrawer from "./components/NavDrawer.vue";
 import appModule from "@/store/modules/App";
-import cards from "@/store/cards.json";
 import cardModule from "@/store/modules/Cards";
-import Card from "./types/Card";
-import apiModule from "@/store/modules/API";
 
 @Component({
   components: {
@@ -49,13 +46,6 @@ import apiModule from "@/store/modules/API";
 })
 export default class App extends Vue {
   value = "browse";
-  created() {
-    const tempCards: Card[] = cards as Card[];
-    cardModule.importCollection(tempCards);
-    for (let card of tempCards) {
-      apiModule.fetchCard(card);
-    }
-  }
   toggleDrawer(): void {
     appModule.setDrawer(!appModule.drawer);
   }

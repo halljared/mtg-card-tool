@@ -1,3 +1,4 @@
+import { CSV } from "@/types/CSV";
 export enum Condition {
   NM = "NM",
   LP = "LP",
@@ -58,8 +59,17 @@ export function sfCardEquals(a: ScryfallCard, b: ScryfallCard): boolean {
 }
 
 export function key(c: Card): string {
-  return c.name.toLowerCase() + c.setCode.toLowerCase();
+  return c.name.toLowerCase() + "_" + c.setCode.toLowerCase();
 }
 export function sfKey(c: ScryfallCard): string {
-  return c.name.toLowerCase() + c.set.toLowerCase();
+  return c.name.toLowerCase() + "_" + c.set.toLowerCase();
+}
+
+export function fromCSV(csv: CSV): Card {
+  return {
+    name: csv["Name"],
+    condition: Condition.NM,
+    setCode: csv["Set Code"],
+    setNumber: parseInt(csv["Card Number"]),
+  };
 }

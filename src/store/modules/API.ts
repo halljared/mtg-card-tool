@@ -5,9 +5,9 @@ import {
   Action,
   getModule,
 } from "vuex-module-decorators";
+import axios from "axios";
 import store from "@/store";
 import Card, { ScryfallCard, sfKey } from "@/types/Card";
-import axios from "axios";
 import { DB_HOST, FETCH_CARD_ROUTE } from "@/types/API";
 
 @Module({ name: "api", store, dynamic: true })
@@ -18,7 +18,7 @@ class APIModule extends VuexModule {
   } = {};
 
   @Mutation
-  setResponse(val: any) {
+  setResponse(val: string) {
     this.response = JSON.stringify(val);
   }
   @Mutation
@@ -27,9 +27,9 @@ class APIModule extends VuexModule {
   }
 
   @Action
-  fetchCard(card: Card) {
-    axios
-      .get(
+  fetchCard(card: Card): Promise<void | ScryfallCard> {
+    return axios
+      .get<ScryfallCard>(
         `${DB_HOST}/${FETCH_CARD_ROUTE}/set/${card.setCode.toLowerCase()}/number/${
           card.setNumber
         }`
