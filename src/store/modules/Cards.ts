@@ -7,7 +7,7 @@ import {
 } from "vuex-module-decorators";
 import store from "@/store";
 import Card from "@/types/Card";
-import { cardEquals } from "../../types/Card";
+import { cardEquals } from "@/types/Card";
 
 @Module({ name: "cards", store, dynamic: true })
 class CardModule extends VuexModule {

@@ -8,7 +8,7 @@ import {
 import store from "@/store";
 import Card from "@/types/Card";
 
-@Module({ name: "app", store, dynamic: true })
+@Module({ name: "import", store, dynamic: true })
 class ImportModule extends VuexModule {
   csv = "";
   cards: Card[] = [];
