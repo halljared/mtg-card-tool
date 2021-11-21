@@ -6,7 +6,7 @@ import {
   getModule,
 } from "vuex-module-decorators";
 import store from "@/store";
-import Card, { fromCSV, ScryfallCard } from "@/types/Card";
+import { fromCSV, ScryfallCard } from "@/types/Card";
 import { parse } from "csv-parse/lib/sync";
 import apiModule from "@/store/modules/API";
 import { CSV } from "@/types/CSV";
@@ -15,7 +15,6 @@ import { CSV } from "@/types/CSV";
 class ImportModule extends VuexModule {
   fileText = "";
   csv: CSV[] = [];
-  cards: Card[] = [];
 
   @Mutation
   setCSV(val: CSV[]) {

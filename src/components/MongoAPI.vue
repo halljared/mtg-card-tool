@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import apiModule from "@/store/modules/API";
 import cardModule from "@/store/modules/Cards";
 
@@ -24,8 +24,9 @@ import cardModule from "@/store/modules/Cards";
 export default class MongoAPI extends Vue {
   input = "";
   goClicked(): void {
-    let card = cardModule.collection[0];
-    apiModule.fetchCard(card);
+    // let card = cardModule.collection[0];
+    // apiModule.fetchCard(card);
+    return;
   }
   get APIOutput(): string {
     return apiModule.response;

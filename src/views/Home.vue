@@ -1,14 +1,14 @@
 <template>
   <v-container>
-    <CardList :cards="cards" />
+    <CardList :cards="cards" :columns="columns" />
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import CardList from "@/components/CardList.vue";
-import Card from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
+import { ScryfallCard } from "@/types/Card";
 
 @Component({
   components: {
@@ -16,7 +16,8 @@ import cardModule from "@/store/modules/Cards";
   },
 })
 export default class Home extends Vue {
-  get cards(): Card[] {
+  private columns: string[] = ["name", "set_name", "cmc", "mana_cost"];
+  get cards(): ScryfallCard[] {
     return cardModule.collection;
   }
 }

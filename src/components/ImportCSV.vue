@@ -4,7 +4,6 @@
       <v-col cols="12" md="5">
         <v-file-input
           v-model="file"
-          :success="hasCSV"
           accept=".csv"
           label="Select a CSV file to import"
         ></v-file-input>
@@ -18,6 +17,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import importModule from "@/store/modules/Import";
 import cardModule from "@/store/modules/Cards";
+import apiModule from "@/store/modules/API";
 
 @Component
 export default class ImportCSV extends Vue {
@@ -29,23 +29,12 @@ export default class ImportCSV extends Vue {
   // Card Number
   // Set Code
   // Printing
-  get hasCSV(): boolean {
-    return !!importModule.csv;
-  }
-
-  @Watch("hasCSV")
-  csvLoaded(hasCSV: boolean): void {
-    if (hasCSV) {
-      importModule.parseCSV();
-      cardModule.setCollection(importModule.cards);
-    }
-  }
-
   @Watch("file")
   fileChanged(file: File | null): void {
     if (file) {
       importModule.fileSelected(file).then(() => {
-        this.$router.push("/browse");
+        cardModule.setCollection(apiModule.fetchedCards);
+        this.$router.push("/");
       });
     }
   }

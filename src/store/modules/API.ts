@@ -7,15 +7,13 @@ import {
 } from "vuex-module-decorators";
 import axios from "axios";
 import store from "@/store";
-import Card, { ScryfallCard, sfKey } from "@/types/Card";
+import Card, { ScryfallCard } from "@/types/Card";
 import { DB_HOST, FETCH_CARD_ROUTE } from "@/types/API";
 
 @Module({ name: "api", store, dynamic: true })
 class APIModule extends VuexModule {
   response = "";
-  fetchedCards: {
-    [key: string]: ScryfallCard;
-  } = {};
+  fetchedCards: ScryfallCard[] = [];
 
   @Mutation
   setResponse(val: string) {
@@ -23,7 +21,7 @@ class APIModule extends VuexModule {
   }
   @Mutation
   addFetchedCard(card: ScryfallCard) {
-    this.fetchedCards[sfKey(card)] = Object.assign({}, card);
+    this.fetchedCards.push(Object.assign({}, card));
   }
 
   @Action

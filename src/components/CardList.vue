@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div v-if="cards.length > 0">
+    <div v-if="cards && cards.length > 0">
       <v-card outlined tile elevation="4" width="100%" class="mb-2">
         <v-container class="pa-0">
           <v-row>
@@ -9,12 +9,12 @@
                 <v-row>
                   <v-col
                     cols="6"
-                    :md="prop == 'name' ? 3 : 2"
-                    v-for="(val, prop) in cards[0]"
-                    :key="prop"
+                    :md="val == 'name' ? 3 : 2"
+                    v-for="val in columns"
+                    :key="val"
                   >
                     <v-card-text class="pa-2 text-truncate">
-                      {{ prop }}
+                      {{ val }}
                     </v-card-text>
                   </v-col>
                 </v-row>
@@ -23,11 +23,7 @@
           </v-row>
         </v-container>
       </v-card>
-      <v-hover
-        v-slot="{ hover }"
-        v-for="card in cards"
-        :key="card.name + card.setCode"
-      >
+      <v-hover v-slot="{ hover }" v-for="card in cards" :key="sfKey(card)">
         <v-card
           outlined
           tile
@@ -43,13 +39,13 @@
                   <v-row>
                     <v-col
                       cols="6"
-                      :md="prop == 'name' ? 3 : 2"
-                      v-for="(val, prop) in card"
-                      :key="prop"
+                      :md="val == 'name' ? 3 : 2"
+                      v-for="val in columns"
+                      :key="val"
                       class="pa-1"
                     >
                       <v-card-text class="pa-1 text-truncate">
-                        {{ val }}
+                        {{ card[val] }}
                       </v-card-text>
                     </v-col>
                   </v-row>
@@ -109,22 +105,24 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Card, { cardEquals } from "../types/Card";
+import { sfCardEquals, ScryfallCard, sfKey } from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
 
 @Component
 export default class CardList extends Vue {
-  @Prop() private cards!: Card[];
+  @Prop() private cards!: ScryfallCard[];
+  columns = ["name", "set_name", "cmc", "mana_cost"];
+  sfKey = sfKey;
 
-  wantClicked(card: Card): void {
+  wantClicked(card: ScryfallCard): void {
     cardModule.addWant(card);
   }
-  removeClicked(card: Card): void {
+  removeClicked(card: ScryfallCard): void {
     cardModule.removeWant(card);
   }
-  selected(card: Card): boolean {
+  selected(card: ScryfallCard): boolean {
     let filtered = cardModule.wants.filter((_card) => {
-      return cardEquals(card, _card);
+      return sfCardEquals(card, _card);
     });
 
     return filtered.length == 1;

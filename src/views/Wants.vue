@@ -7,8 +7,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import CardList from "@/components/CardList.vue";
-import Card from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
+import { ScryfallCard } from "@/types/Card";
 
 @Component({
   components: {
@@ -16,7 +16,7 @@ import cardModule from "@/store/modules/Cards";
   },
 })
 export default class Wants extends Vue {
-  get wants(): Card[] {
+  get wants(): ScryfallCard[] {
     return cardModule.wants;
   }
 }

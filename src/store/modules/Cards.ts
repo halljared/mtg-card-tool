@@ -6,47 +6,46 @@ import {
   getModule,
 } from "vuex-module-decorators";
 import store from "@/store";
-import Card from "@/types/Card";
-import { cardEquals } from "@/types/Card";
+import { ScryfallCard, sfCardEquals } from "@/types/Card";
 
 @Module({ name: "cards", store, dynamic: true })
 class CardModule extends VuexModule {
-  collection: Card[] = [];
-  wants: Card[] = [];
+  collection: ScryfallCard[] = [];
+  wants: ScryfallCard[] = [];
 
   @Mutation
-  setCollection(cards: Card[]) {
+  setCollection(cards: ScryfallCard[]) {
     this.collection = Array.from(cards);
   }
   @Mutation
-  setWants(cards: Card[]) {
+  setWants(cards: ScryfallCard[]) {
     this.wants = Array.from(cards);
   }
   @Mutation
-  pushWant(card: Card) {
+  pushWant(card: ScryfallCard) {
     this.wants.push(Object.assign({}, card));
   }
   @Mutation
-  filterWant(card: Card) {
+  filterWant(card: ScryfallCard) {
     this.wants = this.wants.filter((_card) => {
-      return !cardEquals(card, _card);
+      return !sfCardEquals(card, _card);
     });
   }
 
   @Action({ commit: "setCollection" })
-  importCollection(cards: Card[]) {
+  importCollection(cards: ScryfallCard[]) {
     return cards;
   }
   @Action({ commit: "setWants" })
-  importWants(cards: Card[]) {
+  importWants(cards: ScryfallCard[]) {
     return cards;
   }
   @Action({ commit: "pushWant" })
-  addWant(card: Card) {
+  addWant(card: ScryfallCard) {
     return card;
   }
   @Action({ commit: "filterWant" })
-  removeWant(card: Card) {
+  removeWant(card: ScryfallCard) {
     return card;
   }
 }
