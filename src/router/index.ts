@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Home from "@/views/Home.vue";
 import Wants from "@/views/Wants.vue";
 import MongoAPI from "@/components/MongoAPI.vue";
+import ImportCSV from "@/components/ImportCSV.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: "/api",
     name: "API",
     component: MongoAPI,
+  },
+  {
+    path: "/import",
+    name: "Import",
+    component: ImportCSV,
   },
   {
     path: "/about",

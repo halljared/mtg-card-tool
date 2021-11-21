@@ -2,7 +2,7 @@
   <v-navigation-drawer v-model="drawer" app>
     <v-list dense nav>
       <v-list-item-group color="primary">
-        <v-list-item v-for="item in items" :key="item.title" link>
+        <v-list-item v-for="item in items" :key="item.title" link :to="item.to">
           <v-list-item-icon class="mr-0">
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -31,9 +31,9 @@ import appModule from "@/store/modules/App";
 
 @Component
 export default class NavDrawer extends Vue {
-  private items: Array<{ icon: string; title: string }> = [
-    { icon: "mdi-view-dashboard", title: "Browse" },
-    { icon: "mdi-magnify", title: "Search" },
+  private items: Array<{ icon: string; title: string; to: string }> = [
+    { icon: "mdi-import", title: "Import", to: "/import" },
+    { icon: "mdi-view-dashboard", title: "Browse", to: "/" },
   ];
   get drawer(): boolean {
     return appModule.drawer;
