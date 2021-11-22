@@ -18,7 +18,6 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import apiModule from "@/store/modules/API";
-import cardModule from "@/store/modules/Cards";
 
 @Component
 export default class MongoAPI extends Vue {
