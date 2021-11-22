@@ -2,7 +2,19 @@
   <v-container>
     <div v-if="cards && cards.length > 0">
       <v-data-table :headers="headers" :items="cards">
-        <template v-slot:[`item.action`]="{ item }" width="100%">
+        <template v-slot:[`item.name`]="{ item }">
+          <td class="text-start">
+            <v-img
+              v-if="item.printing == Printing.FOIL"
+              src="@/assets/foil_icon_24.png"
+              height="18px"
+              width="18px"
+              class="mr-1 foil-icon"
+            ></v-img>
+            <span>{{ item.name }}</span>
+          </td>
+        </template>
+        <template v-slot:[`item.action`]="{ item }">
           <td>
             <v-btn
               outlined
@@ -44,12 +56,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { sfCardEquals, ScryfallCard, sfKey } from "@/types/Card";
+import { cardEquals, ScryfallCard, key, Printing } from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
 
 @Component
 export default class CardList extends Vue {
   @Prop() private cards!: ScryfallCard[];
+  private Printing = Printing;
   headers = [
     { text: "Name", value: "name" },
     { text: "Set", value: "set_name" },
@@ -57,7 +70,7 @@ export default class CardList extends Vue {
     { text: "Cost", value: "mana_cost" },
     { text: "", value: "action", sortable: false },
   ];
-  sfKey = sfKey;
+  key = key;
 
   wantClicked(card: ScryfallCard): void {
     cardModule.addWant(card);
@@ -67,10 +80,18 @@ export default class CardList extends Vue {
   }
   selected(card: ScryfallCard): boolean {
     let filtered = cardModule.wants.filter((_card) => {
-      return sfCardEquals(card, _card);
+      return cardEquals(card, _card);
     });
 
     return filtered.length == 1;
   }
 }
 </script>
+
+<style scoped>
+.foil-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 2px;
+}
+</style>

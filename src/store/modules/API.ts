@@ -20,8 +20,10 @@ class APIModule extends VuexModule {
     this.response = JSON.stringify(val);
   }
   @Mutation
-  addFetchedCard(card: ScryfallCard) {
-    this.fetchedCards.push(Object.assign({}, card));
+  addFetchedCard(options: [Card, ScryfallCard]) {
+    const card = options[0];
+    const sfCard = options[1];
+    this.fetchedCards.push(Object.assign(Object.assign({}, card), sfCard));
   }
 
   @Action
@@ -35,7 +37,7 @@ class APIModule extends VuexModule {
       .then((response) => {
         this.context.commit("setResponse", response.data);
         if (response.data) {
-          this.context.commit("addFetchedCard", response.data);
+          this.context.commit("addFetchedCard", [card, response.data]);
         }
       });
   }

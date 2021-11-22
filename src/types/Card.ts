@@ -6,15 +6,23 @@ export enum Condition {
   HP = "HP",
   D = "D",
 }
+export enum Printing {
+  NORMAL = "Normal",
+  FOIL = "Foil",
+}
 export default interface Card {
   name: string;
   setNumber: number;
   setCode: string;
   condition: Condition;
+  quantity: number;
+  printing: Printing;
 }
 export interface ScryfallCard {
   object: string; // "card"
   name: string; // "Brazen Wolves"
+  printing: Printing; // "Normal"
+  quantity: number;
   lang: string; // "en"
   uri: string; // "https://api.scryfall.com/cards/ab8e2ece-3c66-4f34-9042-fc02639c6a79"
   scryfall_uri: string; // "https://scryfall.com/card/emn/122/brazen-wolves?utm_source=api"
@@ -51,18 +59,12 @@ export interface ScryfallCard {
   };
 }
 
-export function cardEquals(a: Card, b: Card): boolean {
+export function cardEquals(a: ScryfallCard, b: ScryfallCard): boolean {
   return key(a) == key(b);
 }
-export function sfCardEquals(a: ScryfallCard, b: ScryfallCard): boolean {
-  return sfKey(a) == sfKey(b);
-}
 
-export function key(c: Card): string {
-  return c.name.toLowerCase() + "_" + c.setCode.toLowerCase();
-}
-export function sfKey(c: ScryfallCard): string {
-  return c.name.toLowerCase() + "_" + c.set.toLowerCase();
+export function key(c: ScryfallCard): string {
+  return `${c.name.toLowerCase()}_${c.set.toLowerCase()}_${c.printing}`;
 }
 
 export function fromCSV(csv: CSV): Card {
@@ -71,5 +73,7 @@ export function fromCSV(csv: CSV): Card {
     condition: Condition.NM,
     setCode: csv["Set Code"],
     setNumber: parseInt(csv["Card Number"]),
+    quantity: parseInt(csv["Quantity"]),
+    printing: csv["Printing"] as Printing,
   };
 }

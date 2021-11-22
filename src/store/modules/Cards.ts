@@ -6,7 +6,7 @@ import {
   getModule,
 } from "vuex-module-decorators";
 import store from "@/store";
-import { ScryfallCard, sfCardEquals } from "@/types/Card";
+import { ScryfallCard, cardEquals } from "@/types/Card";
 
 @Module({ name: "cards", store, dynamic: true })
 class CardModule extends VuexModule {
@@ -28,7 +28,7 @@ class CardModule extends VuexModule {
   @Mutation
   filterWant(card: ScryfallCard) {
     this.wants = this.wants.filter((_card) => {
-      return !sfCardEquals(card, _card);
+      return !cardEquals(card, _card);
     });
   }
 
