@@ -10,6 +10,13 @@ export enum Printing {
   NORMAL = "Normal",
   FOIL = "Foil",
 }
+export enum Identity {
+  WHITE = "W",
+  BLUE = "U",
+  BLACK = "B",
+  RED = "R",
+  GREEN = "G",
+}
 export default interface Card {
   name: string;
   setNumber: number;

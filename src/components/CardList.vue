@@ -14,6 +14,11 @@
             <span>{{ item.name }}</span>
           </td>
         </template>
+        <template v-slot:[`item.color_identity`]="{ item }">
+          <td class="text-start">
+            <mana-symbols :symbols="item.color_identity"></mana-symbols>
+          </td>
+        </template>
         <template v-slot:[`item.action`]="{ item }">
           <td>
             <v-btn
@@ -58,8 +63,13 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { cardEquals, ScryfallCard, key, Printing } from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
+import ManaSymbols from "./ManaSymbols.vue";
 
-@Component
+@Component({
+  components: {
+    ManaSymbols,
+  },
+})
 export default class CardList extends Vue {
   @Prop() private cards!: ScryfallCard[];
   private Printing = Printing;
@@ -67,7 +77,7 @@ export default class CardList extends Vue {
     { text: "Name", value: "name" },
     { text: "Set", value: "set_name" },
     { text: "CMC", value: "cmc" },
-    { text: "Cost", value: "mana_cost" },
+    { text: "Colors", value: "color_identity" },
     { text: "", value: "action", sortable: false },
   ];
   key = key;
@@ -88,7 +98,7 @@ export default class CardList extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .foil-icon {
   display: inline-block;
   vertical-align: middle;
