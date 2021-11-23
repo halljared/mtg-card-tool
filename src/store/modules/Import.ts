@@ -15,6 +15,7 @@ import { CSV } from "@/types/CSV";
 class ImportModule extends VuexModule {
   fileText = "";
   csv: CSV[] = [];
+  loading = false;
 
   @Mutation
   setCSV(val: CSV[]) {
@@ -24,11 +25,16 @@ class ImportModule extends VuexModule {
   setFileText(val: string) {
     this.fileText = val;
   }
+  @Mutation
+  setLoading(val: boolean) {
+    this.loading = val;
+  }
 
   @Action
   fileSelected(
     val: File
   ): Promise<PromiseSettledResult<void | ScryfallCard>[]> {
+    this.context.commit("setLoading", true);
     const reader = new FileReader();
     const fetchPromise = new Promise<
       PromiseSettledResult<void | ScryfallCard>[]
@@ -47,6 +53,9 @@ class ImportModule extends VuexModule {
             promises.push(apiModule.fetchCard(fromCSV(record)));
           }
           const promiseAll = Promise.allSettled(promises);
+          promiseAll.finally(() => {
+            this.context.commit("setLoading", false);
+          });
           resolve(promiseAll);
         }
       });

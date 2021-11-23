@@ -26,6 +26,7 @@ export default interface Card {
   printing: Printing;
 }
 export interface ScryfallCard {
+  id?: string;
   object: string; // "card"
   name: string; // "Brazen Wolves"
   printing: Printing; // "Normal"

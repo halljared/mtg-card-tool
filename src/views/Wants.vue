@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <CardList :cards="wants" />
+    <CardList :cards="wants" wants />
   </v-container>
 </template>
 

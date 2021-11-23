@@ -32,9 +32,9 @@ export default class ImportCSV extends Vue {
   @Watch("file")
   fileChanged(file: File | null): void {
     if (file) {
+      this.$router.push("/");
       importModule.fileSelected(file).then(() => {
         cardModule.setCollection(apiModule.fetchedCards);
-        this.$router.push("/");
       });
     }
   }
