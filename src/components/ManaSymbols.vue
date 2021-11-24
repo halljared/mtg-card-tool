@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Identity } from "@/types/Card";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 interface SymbolClassMap {
   plains?: boolean;
