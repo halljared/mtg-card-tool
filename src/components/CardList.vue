@@ -5,10 +5,85 @@
         <v-card outlined tile>
           <v-expansion-panel-header expand-icon="mdi-filter" />
           <v-expansion-panel-content>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-autocomplete label="Name" :items="names" clearable>
+                  </v-autocomplete>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    label="Card Text"
+                    v-model="cardTextSearch"
+                    clearable
+                    @change.
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    label="Set Name"
+                    :items="setNames"
+                    clearable
+                    multiple
+                    chips
+                    deletable-chips
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    label="Type"
+                    :items="types"
+                    clearable
+                    multiple
+                    chips
+                    deletable-chips
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    label="Subtype"
+                    :items="subTypes"
+                    clearable
+                    multiple
+                    chips
+                    deletable-chips
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    label="Keyword"
+                    :items="keywords"
+                    clearable
+                    multiple
+                    chips
+                    deletable-chips
+                  >
+                  </v-autocomplete>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    label="Identity"
+                    v-model="selectedIdentities"
+                    :items="identities"
+                    clearable
+                    multiple
+                    chips
+                  >
+                    <template v-slot:selection="data">
+                      <v-chip close @click:close="removeIdentity(data.item)">
+                        <mana-symbols :symbols="[data.item]" />
+                      </v-chip>
+                    </template>
+                    <template v-slot:item="data">
+                      <mana-symbols :symbols="[data.item]" />
+                    </template>
+                  </v-autocomplete>
+                </v-col>
+              </v-row>
+            </v-container>
           </v-expansion-panel-content>
         </v-card>
       </v-expansion-panel>
@@ -72,7 +147,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { cardEquals, ScryfallCard, key, Printing } from "@/types/Card";
+import {
+  cardEquals,
+  ScryfallCard,
+  key,
+  Printing,
+  Identity,
+} from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
 import ManaSymbols from "./ManaSymbols.vue";
 import importModule from "@/store/modules/Import";
@@ -83,8 +164,10 @@ import importModule from "@/store/modules/Import";
   },
 })
 export default class CardList extends Vue {
-  @Prop() private cards!: ScryfallCard[];
+  @Prop({ default: [] }) private cards!: ScryfallCard[];
   @Prop({ type: Boolean }) private wants!: boolean;
+  selectedIdentities: Identity[] = [];
+  cardTextSearch!: string;
   private Printing = Printing;
   headers = [
     { text: "Name", value: "name", width: "30%" },
@@ -95,10 +178,75 @@ export default class CardList extends Vue {
     { text: "", value: "action", sortable: false },
   ];
   key = key;
+  identities = [
+    Identity.WHITE,
+    Identity.BLUE,
+    Identity.BLACK,
+    Identity.RED,
+    Identity.GREEN,
+  ];
   get loading(): boolean {
     return importModule.loading;
   }
+  get setNames(): string[] {
+    return this.cards.map((card) => {
+      return card.set_name;
+    });
+  }
+  get names(): string[] {
+    return this.cards.map((card) => {
+      return card.name;
+    });
+  }
+  get keywords(): string[] {
+    return this.cards
+      .map((card) => {
+        return card.keywords;
+      })
+      .flat();
+  }
+  get types(): string[] {
+    return this.cards
+      .map((card) => {
+        let types: string;
+        if (card.type_line.indexOf("—") > 0) {
+          types = card.type_line.split("—")[0];
+        } else {
+          types = card.type_line;
+        }
+        return types.split(" ").filter((split) => {
+          return split.length > 0 && split != " ";
+        });
+      })
+      .flat()
+      .filter((flat, index, self) => {
+        return self.indexOf(flat) === index;
+      });
+  }
+  get subTypes(): string[] {
+    return this.cards
+      .map((card) => {
+        let types: string;
+        if (card.type_line.indexOf("—") > 0) {
+          types = card.type_line.split("—")[1];
+        } else {
+          types = " ";
+        }
+        console.log(types);
+        return types.split(" ").filter((split) => {
+          return split.length > 0 && split != " ";
+        });
+      })
+      .flat()
+      .filter((flat, index, self) => {
+        return self.indexOf(flat) === index;
+      });
+  }
 
+  removeIdentity(identity: Identity): void {
+    const index = this.selectedIdentities.indexOf(identity);
+    this.selectedIdentities.splice(index, 1);
+  }
   wantClicked(card: ScryfallCard): void {
     cardModule.addWant(card);
   }

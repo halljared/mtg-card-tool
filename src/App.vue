@@ -9,7 +9,9 @@
 
     <v-main>
       <v-container fluid>
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </v-container>
       <v-bottom-navigation app color="primary" :value="value">
         <v-btn value="browse" to="/">

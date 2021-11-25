@@ -42,6 +42,7 @@ export interface ScryfallCard {
     art_crop: string;
     border_crop: string;
   };
+  keywords: string[];
   mana_cost: "string"; // "{2}{R}"
   cmc: number; // 3
   type_line: "string"; // "Creature — Wolf"
