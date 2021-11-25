@@ -50,6 +50,7 @@ export interface ScryfallCard {
   toughness?: "string"; // "3"
   colors: string[];
   color_identity: string[];
+  oracle_text: string;
   legalities: {
     [key: string]: string;
   };

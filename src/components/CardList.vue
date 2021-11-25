@@ -8,15 +8,22 @@
             <v-container>
               <v-row>
                 <v-col>
-                  <v-autocomplete label="Name" :items="names" clearable>
+                  <v-autocomplete
+                    label="Name"
+                    v-model="nameInput"
+                    :items="names"
+                    clearable
+                    @input="nameInputSearch"
+                  >
                   </v-autocomplete>
                 </v-col>
                 <v-col>
                   <v-text-field
                     label="Card Text"
-                    v-model="cardTextSearch"
+                    v-model="textInput"
                     clearable
-                    @change.
+                    @keyup="textInputSearch"
+                    @click:clear="textInputSearch"
                   ></v-text-field>
                 </v-col>
                 <v-col>
@@ -88,7 +95,12 @@
         </v-card>
       </v-expansion-panel>
     </v-expansion-panels>
-    <v-data-table :headers="headers" :items="cards" :loading="loading">
+    <v-data-table
+      :headers="headers"
+      :items="filtered.length ? filtered : cards"
+      :loading="loading"
+      :key="keyCounter"
+    >
       <template v-slot:[`item.name`]="{ item }">
         <td class="text-start">
           <v-img
@@ -157,6 +169,7 @@ import {
 import cardModule from "@/store/modules/Cards";
 import ManaSymbols from "./ManaSymbols.vue";
 import importModule from "@/store/modules/Import";
+import { debounce, DebouncedFunc } from "lodash";
 
 @Component({
   components: {
@@ -164,10 +177,59 @@ import importModule from "@/store/modules/Import";
   },
 })
 export default class CardList extends Vue {
+  created() {
+    const _textSearch = (() => {
+      if (this.textInput) {
+        const needle = this.textInput.toLowerCase();
+        this.filteredbyText = this.cards.filter((card) => {
+          return (
+            card.oracle_text &&
+            card.oracle_text.toLowerCase().indexOf(needle) >= 0
+          );
+        });
+      } else {
+        this.filteredbyText = [];
+      }
+      this.mergeFilters();
+      this.forceRender();
+    }).bind(this);
+    this.textInputSearch = debounce(_textSearch, 500);
+  }
   @Prop({ default: [] }) private cards!: ScryfallCard[];
   @Prop({ type: Boolean }) private wants!: boolean;
+  keyCounter = 0;
+  filtered: ScryfallCard[] = [];
   selectedIdentities: Identity[] = [];
-  cardTextSearch!: string;
+  textInput = "";
+  textInputSearch!: DebouncedFunc<() => void>;
+  filteredbyText: ScryfallCard[] = [];
+  nameInput = "";
+  filteredbyName: ScryfallCard[] = [];
+  forceRender(): void {
+    this.keyCounter++;
+  }
+  nameInputSearch(): void {
+    this.filteredbyName = this.cards.filter((card) => {
+      return card.name == this.nameInput;
+    });
+    this.mergeFilters();
+  }
+  mergeFilters(): void {
+    const filters: Array<ScryfallCard[]> = [];
+    let filtered = this.cards;
+    if (this.filteredbyText.length) filters.push(this.filteredbyText);
+    if (this.filteredbyName.length) filters.push(this.filteredbyName);
+    for (let filter of filters) {
+      filtered = filtered.filter((card) => {
+        return filter.indexOf(card) >= 0;
+      });
+    }
+    if (this.filtered.length < this.cards.length) {
+      this.filtered = filtered;
+    } else {
+      this.filtered = [];
+    }
+  }
   private Printing = Printing;
   headers = [
     { text: "Name", value: "name", width: "30%" },
@@ -232,7 +294,6 @@ export default class CardList extends Vue {
         } else {
           types = " ";
         }
-        console.log(types);
         return types.split(" ").filter((split) => {
           return split.length > 0 && split != " ";
         });
