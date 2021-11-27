@@ -13,6 +13,9 @@
                     v-model="nameInput"
                     :items="names"
                     clearable
+                    aria-autocomplete="none"
+                    autocomplete="off"
+                    type="search"
                     @input="nameInputSearch"
                   >
                   </v-autocomplete>
@@ -22,8 +25,11 @@
                     label="Card Text"
                     v-model="textInput"
                     clearable
+                    aria-autocomplete="none"
+                    autocomplete="off"
+                    type="search"
                     @keyup="textInputSearch"
-                    @click:clear="textInputSearch"
+                    @click:clear="textInputCleared"
                   ></v-text-field>
                 </v-col>
                 <v-col>
@@ -118,6 +124,17 @@
           <mana-symbols :symbols="item.color_identity"></mana-symbols>
         </td>
       </template>
+      <template v-slot:[`item.prices`]="{ item }">
+        <td class="text-start">
+          {{
+            `\$${
+              item.printing == Printing.NORMAL
+                ? item.prices["usd"]
+                : item.prices["usd_foil"]
+            }`
+          }}
+        </td>
+      </template>
       <template v-slot:[`item.action`]="{ item }">
         <td>
           <v-btn
@@ -165,12 +182,12 @@ import {
   key,
   Printing,
   Identity,
+  Price,
 } from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
 import ManaSymbols from "./ManaSymbols.vue";
 import importModule from "@/store/modules/Import";
 import { debounce, DebouncedFunc } from "lodash";
-
 @Component({
   components: {
     ManaSymbols,
@@ -208,6 +225,10 @@ export default class CardList extends Vue {
   forceRender(): void {
     this.keyCounter++;
   }
+  textInputCleared(): void {
+    this.filteredbyText = [];
+    this.mergeFilters();
+  }
   nameInputSearch(): void {
     this.filteredbyName = this.cards.filter((card) => {
       return card.name == this.nameInput;
@@ -224,7 +245,7 @@ export default class CardList extends Vue {
         return filter.indexOf(card) >= 0;
       });
     }
-    if (this.filtered.length < this.cards.length) {
+    if (filtered.length < this.cards.length) {
       this.filtered = filtered;
     } else {
       this.filtered = [];
@@ -237,6 +258,16 @@ export default class CardList extends Vue {
     { text: "CMC", value: "cmc", width: "12%" },
     { text: "Colors", value: "color_identity", width: "12%" },
     { text: "Qty", value: "quantity", width: "12%", sortable: false },
+    {
+      text: "Price",
+      value: "prices",
+      width: "12%",
+      sort: (a: Price, b: Price): number => {
+        const numA = a.usd || a.usd_foil,
+          numB = b.usd || b.usd_foil;
+        return parseFloat(numA) > parseFloat(numB) ? 1 : -1;
+      },
+    },
     { text: "", value: "action", sortable: false },
   ];
   key = key;

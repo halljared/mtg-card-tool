@@ -17,6 +17,10 @@ export enum Identity {
   RED = "R",
   GREEN = "G",
 }
+export interface Price {
+  usd: string;
+  usd_foil: string;
+}
 export default interface Card {
   name: string;
   setNumber: number;
