@@ -46,7 +46,7 @@
                 <v-col>
                   <v-autocomplete
                     label="Type"
-                    :items="types"
+                    :items="superTypeOptions"
                     clearable
                     multiple
                     chips
@@ -57,7 +57,7 @@
                 <v-col>
                   <v-autocomplete
                     label="Subtype"
-                    :items="subTypes"
+                    :items="subTypeOptions"
                     clearable
                     multiple
                     chips
@@ -190,6 +190,12 @@ import apiModule from "@/store/modules/API";
 })
 export default class CardList extends Vue {
   created() {
+    apiModule.fetchSuperTypeOptions().then((options) => {
+      if (options) this.superTypeOptions = options;
+    });
+    apiModule.fetchSubTypeOptions().then((options) => {
+      if (options) this.subTypeOptions = options;
+    });
     this.fetchPage();
     const _textSearch = (() => {
       if (this.textInput) {
@@ -210,6 +216,8 @@ export default class CardList extends Vue {
   }
   @Prop({ default: [] }) private cards!: ScryfallCard[];
   @Prop({ type: Boolean }) private wants!: boolean;
+  superTypeOptions: string[] = [];
+  subTypeOptions: string[] = [];
   options: DataTableOptions = {
     itemsPerPage: 10,
     multiSort: false,
@@ -305,42 +313,6 @@ export default class CardList extends Vue {
         return card.keywords;
       })
       .flat();
-  }
-  get types(): string[] {
-    return this.cards
-      .map((card) => {
-        let types: string;
-        if (card.type_line.indexOf("—") > 0) {
-          types = card.type_line.split("—")[0];
-        } else {
-          types = card.type_line;
-        }
-        return types.split(" ").filter((split) => {
-          return split.length > 0 && split != " ";
-        });
-      })
-      .flat()
-      .filter((flat, index, self) => {
-        return self.indexOf(flat) === index;
-      });
-  }
-  get subTypes(): string[] {
-    return this.cards
-      .map((card) => {
-        let types: string;
-        if (card.type_line.indexOf("—") > 0) {
-          types = card.type_line.split("—")[1];
-        } else {
-          types = " ";
-        }
-        return types.split(" ").filter((split) => {
-          return split.length > 0 && split != " ";
-        });
-      })
-      .flat()
-      .filter((flat, index, self) => {
-        return self.indexOf(flat) === index;
-      });
   }
 
   removeIdentity(identity: Identity): void {

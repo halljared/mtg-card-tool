@@ -49,7 +49,8 @@ export interface ScryfallCard {
   keywords: string[];
   mana_cost: "string"; // "{2}{R}"
   cmc: number; // 3
-  type_line: "string"; // "Creature — Wolf"
+  superTypes: string[];
+  subTypes: string[];
   power?: "string"; // "2"
   toughness?: "string"; // "3"
   colors: string[];

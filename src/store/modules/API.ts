@@ -13,6 +13,8 @@ import {
   FETCH_All_CARDS_ROUTE,
   FETCH_CARD_ROUTE,
   FETCH_PAGE_ROUTE,
+  FETCH_SUBTYPE_OPTIONS_ROUTE,
+  FETCH_SUPERTYPE_OPTIONS_ROUTE,
 } from "@/types/API";
 import { DataTableOptions } from "../../types/Vuetify";
 
@@ -39,6 +41,27 @@ class APIModule extends VuexModule {
       card.id = key(card);
     }
     this.fetchedCards = cards;
+  }
+
+  @Action
+  fetchSubTypeOptions(): Promise<void | string[]> {
+    return axios
+      .get<string[]>(`${DB_HOST}/${FETCH_SUBTYPE_OPTIONS_ROUTE}`)
+      .then((response) => {
+        if (response.data) {
+          return response.data;
+        }
+      });
+  }
+  @Action
+  fetchSuperTypeOptions(): Promise<void | string[]> {
+    return axios
+      .get<string[]>(`${DB_HOST}/${FETCH_SUPERTYPE_OPTIONS_ROUTE}`)
+      .then((response) => {
+        if (response.data) {
+          return response.data;
+        }
+      });
   }
 
   @Action
