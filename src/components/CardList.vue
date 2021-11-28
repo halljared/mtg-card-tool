@@ -103,7 +103,9 @@
     </v-expansion-panels>
     <v-data-table
       :headers="headers"
-      :items="filtered.length ? filtered : cards"
+      :items="cards"
+      :options.sync="options"
+      :server-items-length="1846"
       :loading="loading"
       :key="keyCounter"
     >
@@ -124,16 +126,8 @@
           <mana-symbols :symbols="item.color_identity"></mana-symbols>
         </td>
       </template>
-      <template v-slot:[`item.prices`]="{ item }">
-        <td class="text-start">
-          {{
-            `\$${
-              item.printing == Printing.NORMAL
-                ? item.prices["usd"]
-                : item.prices["usd_foil"]
-            }`
-          }}
-        </td>
+      <template v-slot:[`item.price`]="{ item }">
+        <td class="text-start">{{ usdFormatter.format(item.price) }}</td>
       </template>
       <template v-slot:[`item.action`]="{ item }">
         <td>
@@ -175,19 +169,20 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import {
   cardEquals,
   ScryfallCard,
   key,
   Printing,
   Identity,
-  Price,
 } from "@/types/Card";
 import cardModule from "@/store/modules/Cards";
 import ManaSymbols from "./ManaSymbols.vue";
 import importModule from "@/store/modules/Import";
 import { debounce, DebouncedFunc } from "lodash";
+import { DataTableOptions } from "../types/Vuetify";
+import apiModule from "@/store/modules/API";
 @Component({
   components: {
     ManaSymbols,
@@ -195,6 +190,7 @@ import { debounce, DebouncedFunc } from "lodash";
 })
 export default class CardList extends Vue {
   created() {
+    this.fetchPage();
     const _textSearch = (() => {
       if (this.textInput) {
         const needle = this.textInput.toLowerCase();
@@ -214,6 +210,18 @@ export default class CardList extends Vue {
   }
   @Prop({ default: [] }) private cards!: ScryfallCard[];
   @Prop({ type: Boolean }) private wants!: boolean;
+  options: DataTableOptions = {
+    itemsPerPage: 10,
+    multiSort: false,
+    mustSort: false,
+    page: 1,
+    sortBy: ["price"],
+    sortDesc: [true],
+  };
+  usdFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
   keyCounter = 0;
   filtered: ScryfallCard[] = [];
   selectedIdentities: Identity[] = [];
@@ -224,6 +232,11 @@ export default class CardList extends Vue {
   filteredbyName: ScryfallCard[] = [];
   forceRender(): void {
     this.keyCounter++;
+  }
+  fetchPage(): void {
+    apiModule.fetchPage(this.options, {}).then(() => {
+      cardModule.setCollection(apiModule.fetchedCards);
+    });
   }
   textInputCleared(): void {
     this.filteredbyText = [];
@@ -260,13 +273,8 @@ export default class CardList extends Vue {
     { text: "Qty", value: "quantity", width: "12%", sortable: false },
     {
       text: "Price",
-      value: "prices",
+      value: "price",
       width: "12%",
-      sort: (a: Price, b: Price): number => {
-        const numA = a.usd || a.usd_foil,
-          numB = b.usd || b.usd_foil;
-        return parseFloat(numA) > parseFloat(numB) ? 1 : -1;
-      },
     },
     { text: "", value: "action", sortable: false },
   ];
@@ -351,6 +359,10 @@ export default class CardList extends Vue {
     });
 
     return filtered.length == 1;
+  }
+  @Watch("options", { deep: true })
+  optionsChanged(): void {
+    this.fetchPage();
   }
 }
 </script>

@@ -8,7 +8,13 @@ import {
 import axios from "axios";
 import store from "@/store";
 import Card, { key, ScryfallCard } from "@/types/Card";
-import { DB_HOST, FETCH_CARD_ROUTE } from "@/types/API";
+import {
+  DB_HOST,
+  FETCH_All_CARDS_ROUTE,
+  FETCH_CARD_ROUTE,
+  FETCH_PAGE_ROUTE,
+} from "@/types/API";
+import { DataTableOptions } from "../../types/Vuetify";
 
 @Module({ name: "api", store, dynamic: true })
 class APIModule extends VuexModule {
@@ -27,6 +33,24 @@ class APIModule extends VuexModule {
     sfCard.id = key(sfCard);
     this.fetchedCards.push(sfCard);
   }
+  @Mutation
+  setFetchedCards(cards: ScryfallCard[]) {
+    for (const card of cards) {
+      card.id = key(card);
+    }
+    this.fetchedCards = cards;
+  }
+
+  @Action
+  fetchAll(): Promise<void> {
+    return axios
+      .get<ScryfallCard>(`${DB_HOST}/${FETCH_All_CARDS_ROUTE}`)
+      .then((response) => {
+        if (response.data) {
+          this.context.commit("setFetchedCards", response.data);
+        }
+      });
+  }
 
   @Action
   fetchCard(card: Card): Promise<void | ScryfallCard> {
@@ -40,6 +64,24 @@ class APIModule extends VuexModule {
         this.context.commit("setResponse", response.data);
         if (response.data) {
           this.context.commit("addFetchedCard", [card, response.data]);
+        }
+      });
+  }
+
+  @Action
+  fetchPage(
+    tableOptions: DataTableOptions,
+    filters: any
+  ): Promise<void | ScryfallCard[]> {
+    return axios
+      .post<ScryfallCard>(`${DB_HOST}/${FETCH_PAGE_ROUTE}`, {
+        tableOptions,
+        filters,
+      })
+      .then((response) => {
+        this.context.commit("setResponse", response.data);
+        if (response.data) {
+          this.context.commit("setFetchedCards", response.data);
         }
       });
   }

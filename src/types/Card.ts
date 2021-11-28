@@ -64,13 +64,7 @@ export interface ScryfallCard {
   collector_number: number; // "122";
   rarity: string; // "common";
   artist: string; // "Nils Hamm";
-  prices: {
-    usd: string | null; // "0.06";
-    usd_foil: string | null;
-    usd_etched: string | null;
-    eur: string | null;
-    eur_foil: string | null;
-  };
+  price: number;
 }
 
 export function cardEquals(a: ScryfallCard, b: ScryfallCard): boolean {
