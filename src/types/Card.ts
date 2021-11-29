@@ -73,7 +73,7 @@ export function cardEquals(a: ScryfallCard, b: ScryfallCard): boolean {
 }
 
 export function key(c: ScryfallCard): string {
-  return `${c.name.toLowerCase()}_${c.set.toLowerCase()}_${c.printing}`;
+  return `${c.collector_number}_${c.set.toLowerCase()}_${c.printing}_${c.lang}`;
 }
 
 export function fromCSV(csv: CSV): Card {

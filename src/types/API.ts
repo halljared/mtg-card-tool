@@ -4,3 +4,9 @@ export const FETCH_All_CARDS_ROUTE = "cards/all";
 export const FETCH_PAGE_ROUTE = "cards/page";
 export const FETCH_SUPERTYPE_OPTIONS_ROUTE = "options/supertypes";
 export const FETCH_SUBTYPE_OPTIONS_ROUTE = "options/subtypes";
+export const FETCH_CARD_NAMES_ROUTE = "options/cardnames";
+
+export interface FilterOptions {
+  name: string;
+  text: string;
+}

@@ -8,17 +8,17 @@
             <v-container>
               <v-row>
                 <v-col>
-                  <v-autocomplete
+                  <v-text-field
                     label="Name"
                     v-model="nameInput"
-                    :items="names"
                     clearable
                     aria-autocomplete="none"
                     autocomplete="off"
                     type="search"
-                    @input="nameInputSearch"
+                    @keyup="nameInputSearch"
+                    @click:clear="nameInputCleared"
                   >
-                  </v-autocomplete>
+                  </v-text-field>
                 </v-col>
                 <v-col>
                   <v-text-field
@@ -104,8 +104,8 @@
     <v-data-table
       :headers="headers"
       :items="cards"
-      :options.sync="options"
-      :server-items-length="1846"
+      :options.sync="tableOptions"
+      :server-items-length="itemCount"
       :loading="loading"
       :key="keyCounter"
     >
@@ -183,6 +183,7 @@ import importModule from "@/store/modules/Import";
 import { debounce, DebouncedFunc } from "lodash";
 import { DataTableOptions } from "../types/Vuetify";
 import apiModule from "@/store/modules/API";
+import { FilterOptions } from "@/types/API";
 @Component({
   components: {
     ManaSymbols,
@@ -197,28 +198,26 @@ export default class CardList extends Vue {
       if (options) this.subTypeOptions = options;
     });
     this.fetchPage();
+    const _nameSearch = (() => {
+      if (this.nameInput) {
+        this.tableOptions.page = 1;
+        this.filterOptions.name = this.nameInput;
+      }
+    }).bind(this);
     const _textSearch = (() => {
       if (this.textInput) {
-        const needle = this.textInput.toLowerCase();
-        this.filteredbyText = this.cards.filter((card) => {
-          return (
-            card.oracle_text &&
-            card.oracle_text.toLowerCase().indexOf(needle) >= 0
-          );
-        });
-      } else {
-        this.filteredbyText = [];
+        this.tableOptions.page = 1;
+        this.filterOptions.text = this.textInput;
       }
-      this.mergeFilters();
-      this.forceRender();
     }).bind(this);
     this.textInputSearch = debounce(_textSearch, 500);
+    this.nameInputSearch = debounce(_nameSearch, 500);
   }
   @Prop({ default: [] }) private cards!: ScryfallCard[];
   @Prop({ type: Boolean }) private wants!: boolean;
   superTypeOptions: string[] = [];
   subTypeOptions: string[] = [];
-  options: DataTableOptions = {
+  tableOptions: DataTableOptions = {
     itemsPerPage: 10,
     multiSort: false,
     mustSort: false,
@@ -226,35 +225,40 @@ export default class CardList extends Vue {
     sortBy: ["price"],
     sortDesc: [true],
   };
+  filterOptions: FilterOptions = {
+    name: "",
+    text: "",
+  };
   usdFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   });
+  itemCount = 0;
   keyCounter = 0;
   filtered: ScryfallCard[] = [];
   selectedIdentities: Identity[] = [];
   textInput = "";
   textInputSearch!: DebouncedFunc<() => void>;
+  nameInputSearch!: DebouncedFunc<() => void>;
   filteredbyText: ScryfallCard[] = [];
+  nameOptions: string[] = [];
   nameInput = "";
+  nameSearch = "";
   filteredbyName: ScryfallCard[] = [];
   forceRender(): void {
     this.keyCounter++;
   }
   fetchPage(): void {
-    apiModule.fetchPage(this.options, {}).then(() => {
+    apiModule.fetchPage(this.options).then((result) => {
+      this.itemCount = (result && result.count) || 0;
       cardModule.setCollection(apiModule.fetchedCards);
     });
   }
-  textInputCleared(): void {
-    this.filteredbyText = [];
-    this.mergeFilters();
+  nameInputCleared(): void {
+    this.filterOptions.name = "";
   }
-  nameInputSearch(): void {
-    this.filteredbyName = this.cards.filter((card) => {
-      return card.name == this.nameInput;
-    });
-    this.mergeFilters();
+  textInputCleared(): void {
+    this.filterOptions.text = "";
   }
   mergeFilters(): void {
     const filters: Array<ScryfallCard[]> = [];
@@ -302,17 +306,24 @@ export default class CardList extends Vue {
       return card.set_name;
     });
   }
-  get names(): string[] {
-    return this.cards.map((card) => {
-      return card.name;
-    });
-  }
   get keywords(): string[] {
     return this.cards
       .map((card) => {
         return card.keywords;
       })
       .flat();
+  }
+  get options(): {
+    tableOptions: DataTableOptions;
+    filterOptions: FilterOptions;
+  } {
+    return {
+      tableOptions: this.tableOptions,
+      filterOptions: this.filterOptions,
+    };
+  }
+  get optionsString(): string {
+    return JSON.stringify(this.options);
   }
 
   removeIdentity(identity: Identity): void {
@@ -332,9 +343,19 @@ export default class CardList extends Vue {
 
     return filtered.length == 1;
   }
-  @Watch("options", { deep: true })
+  @Watch("optionsString")
   optionsChanged(): void {
     this.fetchPage();
+  }
+  @Watch("nameSearch")
+  nameSearchChanged(search: string): void {
+    if (search == "") {
+      this.nameOptions = [];
+    } else {
+      apiModule.fetchCardNames(search).then((names) => {
+        if (names) this.nameOptions = names;
+      });
+    }
   }
 }
 </script>

@@ -11,10 +11,12 @@ import Card, { key, ScryfallCard } from "@/types/Card";
 import {
   DB_HOST,
   FETCH_All_CARDS_ROUTE,
+  FETCH_CARD_NAMES_ROUTE,
   FETCH_CARD_ROUTE,
   FETCH_PAGE_ROUTE,
   FETCH_SUBTYPE_OPTIONS_ROUTE,
   FETCH_SUPERTYPE_OPTIONS_ROUTE,
+  FilterOptions,
 } from "@/types/API";
 import { DataTableOptions } from "../../types/Vuetify";
 
@@ -43,6 +45,18 @@ class APIModule extends VuexModule {
     this.fetchedCards = cards;
   }
 
+  @Action
+  fetchCardNames(search: string): Promise<void | string[]> {
+    return axios
+      .get<string[]>(`${DB_HOST}/${FETCH_CARD_NAMES_ROUTE}`, {
+        params: { search },
+      })
+      .then((response) => {
+        if (response.data) {
+          return response.data;
+        }
+      });
+  }
   @Action
   fetchSubTypeOptions(): Promise<void | string[]> {
     return axios
@@ -92,20 +106,24 @@ class APIModule extends VuexModule {
   }
 
   @Action
-  fetchPage(
-    tableOptions: DataTableOptions,
-    filters: any
-  ): Promise<void | ScryfallCard[]> {
+  fetchPage(options: {
+    tableOptions: DataTableOptions;
+    filterOptions: FilterOptions;
+  }): Promise<void | { count: number; docs: ScryfallCard[] }> {
     return axios
-      .post<ScryfallCard>(`${DB_HOST}/${FETCH_PAGE_ROUTE}`, {
-        tableOptions,
-        filters,
-      })
+      .post<void | { count: number; docs: ScryfallCard[] }>(
+        `${DB_HOST}/${FETCH_PAGE_ROUTE}`,
+        {
+          tableOptions: options.tableOptions,
+          filterOptions: options.filterOptions,
+        }
+      )
       .then((response) => {
         this.context.commit("setResponse", response.data);
         if (response.data) {
-          this.context.commit("setFetchedCards", response.data);
+          this.context.commit("setFetchedCards", response.data.docs);
         }
+        return response.data;
       });
   }
 }
