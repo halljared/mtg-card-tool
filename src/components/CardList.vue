@@ -1,13 +1,13 @@
 <template>
-  <v-container id="cardList">
-    <v-expansion-panels class="pb-1">
+  <v-container class="pa-0">
+    <v-expansion-panels class="pb-1" v-if="!wants">
       <v-expansion-panel>
         <v-card outlined tile>
           <v-expansion-panel-header expand-icon="mdi-filter" />
           <v-expansion-panel-content>
             <v-container>
               <v-row>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-text-field
                     label="Name"
                     type="search"
@@ -18,7 +18,7 @@
                   >
                   </v-text-field>
                 </v-col>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-text-field
                     label="Card Text"
                     type="search"
@@ -28,7 +28,7 @@
                     @click:clear="textInputCleared"
                   ></v-text-field>
                 </v-col>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-autocomplete
                     label="Set Name"
                     type="search"
@@ -41,7 +41,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-autocomplete
                     label="Type"
                     type="search"
@@ -54,7 +54,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-autocomplete
                     label="Subtype"
                     type="search"
@@ -67,7 +67,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-autocomplete
                     label="Keyword"
                     type="search"
@@ -80,7 +80,7 @@
                   >
                   </v-autocomplete>
                 </v-col>
-                <v-col>
+                <v-col cols="6" class="col-md-3">
                   <v-autocomplete
                     label="Identity"
                     v-model="filterOptions.colors"

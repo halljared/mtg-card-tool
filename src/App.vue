@@ -8,12 +8,12 @@
     </v-app-bar>
 
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="pa-0">
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
       </v-container>
-      <v-bottom-navigation app color="primary" :value="value">
+      <v-bottom-navigation app color="primary" :value="value" height="42px">
         <v-btn value="browse" to="/">
           <span>Browse</span>
           <v-icon>mdi-magnify</v-icon>
