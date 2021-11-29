@@ -35,7 +35,7 @@ export interface ScryfallCard {
   name: string; // "Brazen Wolves"
   printing: Printing; // "Normal"
   quantity: number;
-  lang: string; // "en"
+  language: string; // "en"
   uri: string; // "https://api.scryfall.com/cards/ab8e2ece-3c66-4f34-9042-fc02639c6a79"
   scryfall_uri: string; // "https://scryfall.com/card/emn/122/brazen-wolves?utm_source=api"
   image_uris: {
@@ -73,7 +73,9 @@ export function cardEquals(a: ScryfallCard, b: ScryfallCard): boolean {
 }
 
 export function key(c: ScryfallCard): string {
-  return `${c.collector_number}_${c.set.toLowerCase()}_${c.printing}_${c.lang}`;
+  return `${c.collector_number}_${c.set.toLowerCase()}_${c.printing}_${
+    c.language
+  }`;
 }
 
 export function fromCSV(csv: CSV): Card {

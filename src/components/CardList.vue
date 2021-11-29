@@ -10,11 +10,9 @@
                 <v-col>
                   <v-text-field
                     label="Name"
+                    type="search"
                     v-model="nameInput"
                     clearable
-                    aria-autocomplete="none"
-                    autocomplete="off"
-                    type="search"
                     @keyup="nameInputSearch"
                     @click:clear="nameInputCleared"
                   >
@@ -23,11 +21,9 @@
                 <v-col>
                   <v-text-field
                     label="Card Text"
+                    type="search"
                     v-model="textInput"
                     clearable
-                    aria-autocomplete="none"
-                    autocomplete="off"
-                    type="search"
                     @keyup="textInputSearch"
                     @click:clear="textInputCleared"
                   ></v-text-field>
@@ -35,7 +31,9 @@
                 <v-col>
                   <v-autocomplete
                     label="Set Name"
-                    :items="setNames"
+                    type="search"
+                    v-model="filterOptions.setNames"
+                    :items="setNameOptions"
                     clearable
                     multiple
                     chips
@@ -46,6 +44,8 @@
                 <v-col>
                   <v-autocomplete
                     label="Type"
+                    type="search"
+                    v-model="filterOptions.superTypes"
                     :items="superTypeOptions"
                     clearable
                     multiple
@@ -57,6 +57,8 @@
                 <v-col>
                   <v-autocomplete
                     label="Subtype"
+                    type="search"
+                    v-model="filterOptions.subTypes"
                     :items="subTypeOptions"
                     clearable
                     multiple
@@ -68,7 +70,9 @@
                 <v-col>
                   <v-autocomplete
                     label="Keyword"
-                    :items="keywords"
+                    type="search"
+                    v-model="filterOptions.keywords"
+                    :items="keywordOptions"
                     clearable
                     multiple
                     chips
@@ -79,7 +83,7 @@
                 <v-col>
                   <v-autocomplete
                     label="Identity"
-                    v-model="selectedIdentities"
+                    v-model="filterOptions.colors"
                     :items="identities"
                     clearable
                     multiple
@@ -191,6 +195,12 @@ import { FilterOptions } from "@/types/API";
 })
 export default class CardList extends Vue {
   created() {
+    apiModule.fetchSetNames().then((options) => {
+      if (options) this.setNameOptions = options;
+    });
+    apiModule.fetchKeywordOptions().then((options) => {
+      if (options) this.keywordOptions = options;
+    });
     apiModule.fetchSuperTypeOptions().then((options) => {
       if (options) this.superTypeOptions = options;
     });
@@ -215,8 +225,6 @@ export default class CardList extends Vue {
   }
   @Prop({ default: [] }) private cards!: ScryfallCard[];
   @Prop({ type: Boolean }) private wants!: boolean;
-  superTypeOptions: string[] = [];
-  subTypeOptions: string[] = [];
   tableOptions: DataTableOptions = {
     itemsPerPage: 10,
     multiSort: false,
@@ -225,10 +233,6 @@ export default class CardList extends Vue {
     sortBy: ["price"],
     sortDesc: [true],
   };
-  filterOptions: FilterOptions = {
-    name: "",
-    text: "",
-  };
   usdFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -236,7 +240,10 @@ export default class CardList extends Vue {
   itemCount = 0;
   keyCounter = 0;
   filtered: ScryfallCard[] = [];
-  selectedIdentities: Identity[] = [];
+  setNameOptions: string[] = [];
+  keywordOptions: string[] = [];
+  superTypeOptions: string[] = [];
+  subTypeOptions: string[] = [];
   textInput = "";
   textInputSearch!: DebouncedFunc<() => void>;
   nameInputSearch!: DebouncedFunc<() => void>;
@@ -245,6 +252,15 @@ export default class CardList extends Vue {
   nameInput = "";
   nameSearch = "";
   filteredbyName: ScryfallCard[] = [];
+  filterOptions: FilterOptions = {
+    name: this.nameInput,
+    text: this.textInput,
+    setNames: [],
+    superTypes: [],
+    subTypes: [],
+    keywords: [],
+    colors: [],
+  };
   forceRender(): void {
     this.keyCounter++;
   }
@@ -301,11 +317,6 @@ export default class CardList extends Vue {
   get loading(): boolean {
     return importModule.loading;
   }
-  get setNames(): string[] {
-    return this.cards.map((card) => {
-      return card.set_name;
-    });
-  }
   get keywords(): string[] {
     return this.cards
       .map((card) => {
@@ -327,8 +338,8 @@ export default class CardList extends Vue {
   }
 
   removeIdentity(identity: Identity): void {
-    const index = this.selectedIdentities.indexOf(identity);
-    this.selectedIdentities.splice(index, 1);
+    const index = this.filterOptions.colors.indexOf(identity);
+    this.filterOptions.colors.splice(index, 1);
   }
   wantClicked(card: ScryfallCard): void {
     cardModule.addWant(card);

@@ -11,9 +11,11 @@ import Card, { key, ScryfallCard } from "@/types/Card";
 import {
   DB_HOST,
   FETCH_All_CARDS_ROUTE,
-  FETCH_CARD_NAMES_ROUTE,
+  FETCH_CARD_NAME_OPTIONS_ROUTE,
   FETCH_CARD_ROUTE,
+  FETCH_KEYWORD_OPTIONS_ROUTE,
   FETCH_PAGE_ROUTE,
+  FETCH_SET_NAME_OPTIONS_ROUTE,
   FETCH_SUBTYPE_OPTIONS_ROUTE,
   FETCH_SUPERTYPE_OPTIONS_ROUTE,
   FilterOptions,
@@ -48,9 +50,29 @@ class APIModule extends VuexModule {
   @Action
   fetchCardNames(search: string): Promise<void | string[]> {
     return axios
-      .get<string[]>(`${DB_HOST}/${FETCH_CARD_NAMES_ROUTE}`, {
+      .get<string[]>(`${DB_HOST}/${FETCH_CARD_NAME_OPTIONS_ROUTE}`, {
         params: { search },
       })
+      .then((response) => {
+        if (response.data) {
+          return response.data;
+        }
+      });
+  }
+  @Action
+  fetchSetNames(): Promise<void | string[]> {
+    return axios
+      .get<string[]>(`${DB_HOST}/${FETCH_SET_NAME_OPTIONS_ROUTE}`)
+      .then((response) => {
+        if (response.data) {
+          return response.data;
+        }
+      });
+  }
+  @Action
+  fetchKeywordOptions(): Promise<void | string[]> {
+    return axios
+      .get<string[]>(`${DB_HOST}/${FETCH_KEYWORD_OPTIONS_ROUTE}`)
       .then((response) => {
         if (response.data) {
           return response.data;
