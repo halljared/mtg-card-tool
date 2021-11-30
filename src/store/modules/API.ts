@@ -9,7 +9,7 @@ import axios from "axios";
 import store from "@/store";
 import Card, { key, ScryfallCard } from "@/types/Card";
 import {
-  DB_HOST,
+  API_HOST,
   FETCH_All_CARDS_ROUTE,
   FETCH_CARD_NAME_OPTIONS_ROUTE,
   FETCH_CARD_ROUTE,
@@ -50,7 +50,7 @@ class APIModule extends VuexModule {
   @Action
   fetchCardNames(search: string): Promise<void | string[]> {
     return axios
-      .get<string[]>(`${DB_HOST}/${FETCH_CARD_NAME_OPTIONS_ROUTE}`, {
+      .get<string[]>(`${API_HOST}/${FETCH_CARD_NAME_OPTIONS_ROUTE}`, {
         params: { search },
       })
       .then((response) => {
@@ -62,7 +62,7 @@ class APIModule extends VuexModule {
   @Action
   fetchSetNames(): Promise<void | string[]> {
     return axios
-      .get<string[]>(`${DB_HOST}/${FETCH_SET_NAME_OPTIONS_ROUTE}`)
+      .get<string[]>(`${API_HOST}/${FETCH_SET_NAME_OPTIONS_ROUTE}`)
       .then((response) => {
         if (response.data) {
           return response.data;
@@ -72,7 +72,7 @@ class APIModule extends VuexModule {
   @Action
   fetchKeywordOptions(): Promise<void | string[]> {
     return axios
-      .get<string[]>(`${DB_HOST}/${FETCH_KEYWORD_OPTIONS_ROUTE}`)
+      .get<string[]>(`${API_HOST}/${FETCH_KEYWORD_OPTIONS_ROUTE}`)
       .then((response) => {
         if (response.data) {
           return response.data;
@@ -82,7 +82,7 @@ class APIModule extends VuexModule {
   @Action
   fetchSubTypeOptions(): Promise<void | string[]> {
     return axios
-      .get<string[]>(`${DB_HOST}/${FETCH_SUBTYPE_OPTIONS_ROUTE}`)
+      .get<string[]>(`${API_HOST}/${FETCH_SUBTYPE_OPTIONS_ROUTE}`)
       .then((response) => {
         if (response.data) {
           return response.data;
@@ -92,7 +92,7 @@ class APIModule extends VuexModule {
   @Action
   fetchSuperTypeOptions(): Promise<void | string[]> {
     return axios
-      .get<string[]>(`${DB_HOST}/${FETCH_SUPERTYPE_OPTIONS_ROUTE}`)
+      .get<string[]>(`${API_HOST}/${FETCH_SUPERTYPE_OPTIONS_ROUTE}`)
       .then((response) => {
         if (response.data) {
           return response.data;
@@ -103,7 +103,7 @@ class APIModule extends VuexModule {
   @Action
   fetchAll(): Promise<void> {
     return axios
-      .get<ScryfallCard>(`${DB_HOST}/${FETCH_All_CARDS_ROUTE}`)
+      .get<ScryfallCard>(`${API_HOST}/${FETCH_All_CARDS_ROUTE}`)
       .then((response) => {
         if (response.data) {
           this.context.commit("setFetchedCards", response.data);
@@ -115,7 +115,7 @@ class APIModule extends VuexModule {
   fetchCard(card: Card): Promise<void | ScryfallCard> {
     return axios
       .get<ScryfallCard>(
-        `${DB_HOST}/${FETCH_CARD_ROUTE}/set/${card.setCode.toLowerCase()}/number/${
+        `${API_HOST}/${FETCH_CARD_ROUTE}/set/${card.setCode.toLowerCase()}/number/${
           card.setNumber
         }`
       )
@@ -134,7 +134,7 @@ class APIModule extends VuexModule {
   }): Promise<void | { count: number; docs: ScryfallCard[] }> {
     return axios
       .post<void | { count: number; docs: ScryfallCard[] }>(
-        `${DB_HOST}/${FETCH_PAGE_ROUTE}`,
+        `${API_HOST}/${FETCH_PAGE_ROUTE}`,
         {
           tableOptions: options.tableOptions,
           filterOptions: options.filterOptions,

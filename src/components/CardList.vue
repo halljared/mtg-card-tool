@@ -83,6 +83,7 @@
                 <v-col cols="6" class="col-md-3">
                   <v-autocomplete
                     label="Identity"
+                    type="search"
                     v-model="filterOptions.colors"
                     :items="identities"
                     clearable
