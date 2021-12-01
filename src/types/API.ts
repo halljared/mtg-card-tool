@@ -1,5 +1,5 @@
 import { Identity } from "@/types/Card";
-export const API_HOST = "http://webserver/services";
+export const API_HOST = process.env.API_HOST;
 export const FETCH_CARD_ROUTE = "fetch_card";
 export const FETCH_All_CARDS_ROUTE = "cards/all";
 export const FETCH_PAGE_ROUTE = "cards/page";
