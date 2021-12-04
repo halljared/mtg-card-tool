@@ -45,8 +45,8 @@
                     less than $5 being discounted 35%</span
                   >.
                 </p>
-                Copy the text below and send it to me along with you email or
-                phone # and I will get message back as soon as possible.
+                Copy the text below and send it to me along with your email or
+                phone # and I will message back as soon as possible.
               </v-card-subtitle>
               <v-card-text>
                 <v-textarea
@@ -95,6 +95,7 @@ export default class Wants extends Vue {
     return JSON.stringify(this.wants);
   }
   clearWants(): void {
+    this.confirm = false;
     cardModule.clearWants();
   }
   jsonToClipboard(): void {
