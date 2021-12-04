@@ -33,7 +33,7 @@ import appModule from "@/store/modules/App";
 export default class NavDrawer extends Vue {
   private items: Array<{ icon: string; title: string; to: string }> = [
     { icon: "mdi-view-dashboard", title: "Browse", to: "/" },
-    { icon: "mdi-import", title: "Import", to: "/import" },
+    // { icon: "mdi-import", title: "Import", to: "/import" },
   ];
   get drawer(): boolean {
     return appModule.drawer;

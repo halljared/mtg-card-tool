@@ -20,10 +20,12 @@ class CardModule extends VuexModule {
   @Mutation
   setWants(cards: ScryfallCard[]) {
     this.wants = Array.from(cards);
+    localStorage.setItem("wants", JSON.stringify(this.wants));
   }
   @Mutation
   pushWant(card: ScryfallCard) {
     this.wants.push(Object.assign({}, card));
+    localStorage.setItem("wants", JSON.stringify(this.wants));
   }
   @Mutation
   filterWant(card: ScryfallCard) {
@@ -36,9 +38,9 @@ class CardModule extends VuexModule {
   importCollection(cards: ScryfallCard[]) {
     return cards;
   }
-  @Action({ commit: "setWants" })
-  importWants(cards: ScryfallCard[]) {
-    return cards;
+  @Action
+  clearWants() {
+    this.context.commit("setWants", []);
   }
   @Action({ commit: "pushWant" })
   addWant(card: ScryfallCard) {
@@ -47,6 +49,15 @@ class CardModule extends VuexModule {
   @Action({ commit: "filterWant" })
   removeWant(card: ScryfallCard) {
     return card;
+  }
+  @Action
+  vivifyLocalWants() {
+    const wants = localStorage.getItem("wants");
+    let cards: ScryfallCard[] = [];
+    if (wants) {
+      cards = JSON.parse(wants);
+    }
+    this.context.commit("setWants", cards);
   }
 }
 

@@ -42,8 +42,8 @@
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="6" class="col-md-3">
-                  <v-autocomplete
-                    label="Type"
+                  <v-select
+                    label="SuperType"
                     type="search"
                     v-model="filterOptions.superTypes"
                     :items="superTypeOptions"
@@ -52,7 +52,7 @@
                     chips
                     deletable-chips
                   >
-                  </v-autocomplete>
+                  </v-select>
                 </v-col>
                 <v-col cols="6" class="col-md-3">
                   <v-autocomplete
@@ -81,8 +81,8 @@
                   </v-autocomplete>
                 </v-col>
                 <v-col cols="6" class="col-md-3">
-                  <v-autocomplete
-                    label="Identity"
+                  <v-select
+                    label="Color"
                     type="search"
                     v-model="filterOptions.colors"
                     :items="identities"
@@ -98,7 +98,7 @@
                     <template v-slot:item="data">
                       <mana-symbols :symbols="[data.item]" />
                     </template>
-                  </v-autocomplete>
+                  </v-select>
                 </v-col>
               </v-row>
             </v-container>
@@ -107,6 +107,7 @@
       </v-expansion-panel>
     </v-expansion-panels>
     <v-data-table
+      ref="table"
       :headers="headers"
       :items="cards"
       :options.sync="tableOptions"
@@ -189,6 +190,7 @@ import { debounce, DebouncedFunc } from "lodash";
 import { DataTableOptions } from "../types/Vuetify";
 import apiModule from "@/store/modules/API";
 import { FilterOptions } from "@/types/API";
+import { VuetifyGoToTarget } from "vuetify/types/services/goto";
 @Component({
   components: {
     ManaSymbols,
@@ -211,13 +213,11 @@ export default class CardList extends Vue {
     this.fetchPage();
     const _nameSearch = (() => {
       if (this.nameInput) {
-        this.tableOptions.page = 1;
         this.filterOptions.name = this.nameInput;
       }
     }).bind(this);
     const _textSearch = (() => {
       if (this.textInput) {
-        this.tableOptions.page = 1;
         this.filterOptions.text = this.textInput;
       }
     }).bind(this);
@@ -267,8 +267,14 @@ export default class CardList extends Vue {
   }
   fetchPage(): void {
     apiModule.fetchPage(this.options).then((result) => {
-      this.itemCount = (result && result.count) || 0;
-      cardModule.setCollection(apiModule.fetchedCards);
+      if (result) {
+        const resultCount = result.count || 0;
+        this.itemCount = resultCount;
+        cardModule.setCollection(apiModule.fetchedCards);
+        if (resultCount > 0 && result.docs.length == 0) {
+          this.tableOptions.page = 1;
+        }
+      }
     });
   }
   nameInputCleared(): void {
@@ -297,9 +303,9 @@ export default class CardList extends Vue {
   headers = [
     { text: "Name", value: "name", width: "30%" },
     { text: "Set", value: "set_name", width: "20%" },
-    { text: "CMC", value: "cmc", width: "12%" },
     { text: "Colors", value: "color_identity", width: "12%" },
     { text: "Qty", value: "quantity", width: "12%", sortable: false },
+    { text: "Language", value: "language", width: "12%", sortable: false },
     {
       text: "Price",
       value: "price",
@@ -354,6 +360,16 @@ export default class CardList extends Vue {
     });
 
     return filtered.length == 1;
+  }
+  @Watch("tableOptions")
+  tableOptionsChanged(curr: DataTableOptions, old: DataTableOptions): void {
+    const newPage = curr.page != old.page;
+    if (newPage) {
+      this.$vuetify.goTo(this.$refs.table as VuetifyGoToTarget, {
+        duration: 350,
+        easing: "easeInOutCubic",
+      });
+    }
   }
   @Watch("optionsString")
   optionsChanged(): void {

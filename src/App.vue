@@ -48,6 +48,9 @@ import cardModule from "@/store/modules/Cards";
 })
 export default class App extends Vue {
   value = "browse";
+  created() {
+    cardModule.vivifyLocalWants();
+  }
   toggleDrawer(): void {
     appModule.setDrawer(!appModule.drawer);
   }
