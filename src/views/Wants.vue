@@ -53,16 +53,15 @@
                   v-model="wantsJSON"
                   rows="3"
                   style="cursor: pointer"
-                  disabled
                 />
-                <v-tooltip v-model="copied" top>
+                <!-- <v-tooltip v-model="copied" top>
                   <template v-slot:activator="{}">
                     <v-btn class="mr-4" title="Copy" @click="jsonToClipboard">
                       <v-icon color="success">mdi-content-copy</v-icon>
                     </v-btn>
                   </template>
                   <span class="success--text">Copied</span>
-                </v-tooltip>
+                </v-tooltip> -->
                 <v-btn @click="dialog = false">Close</v-btn>
               </v-card-text>
             </v-card>
