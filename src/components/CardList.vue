@@ -124,7 +124,17 @@
             width="18px"
             class="mr-1 foil-icon"
           ></v-img>
-          <span>{{ item.name }}</span>
+          <v-menu open-on-hover open-delay="300">
+            <template v-slot:activator="{ on, attrs }">
+              <span v-bind="attrs" v-on="on">{{ item.name }}</span>
+            </template>
+            <v-card height="401px" width="288px" style="border-radius: 15px">
+              <v-img
+                :src="item.image_uris.normal"
+                style="border-radius: 15px"
+              />
+            </v-card>
+          </v-menu>
         </td>
       </template>
       <template v-slot:[`item.color_identity`]="{ item }">
